@@ -1,0 +1,47 @@
+`timescale 1ns / 1ps
+
+module REGI_PIPO_tb;
+
+    // Inputs
+    reg [3:0] D;
+    reg [1:0] sel;
+    reg clk;
+    reg rst;
+    reg XL;
+    reg XR;
+
+    // Outputs
+    wire [3:0] Q;
+
+    // Instantiate the Unit Under Test (UUT)
+    REGI_PIPO uut (
+        .D(D), 
+        .sel(sel), 
+        .clk(clk), 
+        .rst(rst), 
+        .XL(XL), 
+        .XR(XR), 
+        .Q(Q)
+    );
+
+    // Clock generation
+    always #10 clk = ~clk;
+
+    initial begin
+        // Initialize Inputs
+        clk = 1;
+        rst = 0;
+        D = 4'b0011;
+        sel = 2'b00;
+        XL = 0;
+        XR = 0;
+
+        // Apply test vectors
+        #10 sel = 2'b11;  // Load D into Q
+        #100 sel = 2'b01; // Shift left with XL as input
+        #100 sel = 2'b10; // Shift right with XR as input
+        #100 sel = 2'b00; // Hold the current value
+        #80 $finish;      // Finish simulation
+    end
+      
+endmodule
