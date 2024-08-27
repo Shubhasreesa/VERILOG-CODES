@@ -1,0 +1,43 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 27.08.2024 12:59:29
+// Design Name: 
+// Module Name: thermometer_code
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// Converts a 7-bit thermometer code to a 3-bit binary code.
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+module thermometer_code(
+    input [6:0] therm,        // 7-bit thermometer code input
+    output reg [2:0] binary_out  // 3-bit binary code output
+    );
+
+    integer i;
+    integer count;
+
+    always @(*) begin
+        count = 0;
+        // Count the number of 1s in the thermometer code
+        for (i = 0; i < 7; i = i + 1) begin
+            if (therm[i]) begin
+                count = count + 1;
+            end
+        end
+        // Assign the count to binary_out, ensure it's 3 bits
+        binary_out = count[2:0];
+    end
+
+endmodule
