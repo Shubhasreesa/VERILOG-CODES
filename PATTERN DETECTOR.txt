@@ -1,0 +1,91 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 05.08.2024 12:39:13
+// Design Name: 
+// Module Name: mealy_patterndetect
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module mealy_patterndetect(
+    input clk,
+    input rst,
+    input dir,
+    output reg [1:0] z
+    );
+
+    reg [1:0] state, next_state; // Using 2-bit states
+    parameter sin = 2'b00, s0 = 2'b01, s01 = 2'b10, s011 = 2'b11;
+    
+    // State transition on clock edge
+    always @(posedge clk or posedge rst) begin
+        if (rst)
+            state <= sin;
+        else
+            state <= next_state;
+    end
+    
+    // Next state logic and output logic (Mealy)
+    always @(state or dir) begin
+        case (state)
+            sin: begin
+                if (dir == 1)
+                    next_state = sin; 
+                else
+                    next_state = s0; 
+            end
+            
+            s0: begin
+                if (dir == 1)
+                    next_state = s01; 
+                else
+                    next_state = s0; 
+            end
+            
+            s01: begin
+                if (dir == 1)
+                    next_state = s011; 
+                else
+                    next_state = s0; 
+            end
+            
+            s011: begin
+                if (dir == 1)
+                    next_state = sin; // Go back to s01 or s00 based on design
+                else
+                    next_state = s0; 
+            end
+            
+            default: next_state = sin;
+        endcase
+    end
+    
+    // Output logic
+    always @(state or dir) begin
+        case(state)
+            sin: z = 2'b00;
+            s0: z = 2'b00;
+            s01: z = 2'b00;
+            s011: 
+                if (dir == 1)
+                    z = 2'b11; // Output when pattern `0111` is detected
+                else
+                    z = 2'b00;
+            default: z = 2'b00;
+        endcase
+    end
+               
+endmodule
