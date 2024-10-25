@@ -1,0 +1,96 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 04.08.2024 19:10:07
+// Design Name: 
+// Module Name: fsm_pattern_moore
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+module fsm_pattern_moore(
+    input wire in,
+    input wire clk,
+    input wire rst,
+    output reg z
+);
+
+    // State encoding
+    parameter sin   = 3'b000,
+              s1    = 3'b001,
+              s10   = 3'b010,
+              s101  = 3'b011,
+              s1011 = 3'b100;
+              
+    reg [2:0] state, nextstate;
+    
+    // State transition on clock and reset
+    always @(posedge clk or posedge rst) begin
+        if (rst)
+            state <= sin;
+        else
+            state <= nextstate;
+    end
+    
+    // Next state logic and output logic
+    always @(state or in) begin  //this starts operating whenever chnage in state or input
+        case (state)
+            sin: begin
+                if (in == 1)
+                    nextstate = s1;
+                else
+                    nextstate = sin;
+                z = 0;
+            end
+            
+            s1: begin
+                if (in == 0)
+                    nextstate = s10;
+                else
+                    nextstate = s1;
+                z = 0;
+            end
+            
+            s10: begin
+                if (in == 1)
+                    nextstate = s101;
+                else
+                    nextstate = sin;
+                z = 0;
+            end
+            
+            s101: begin
+                if (in == 1)
+                    nextstate = s1011;
+                else
+                    nextstate = s10;
+                z = 0;
+            end
+            
+            s1011: begin
+                if (in == 1)
+                    nextstate = s1;
+                else
+                    nextstate = s10;
+                z = 1;//pattern has been succesfully detected
+            end
+            
+            default: begin
+                nextstate = sin;
+                z = 0;
+            end
+        endcase
+    end
+
+endmodule
