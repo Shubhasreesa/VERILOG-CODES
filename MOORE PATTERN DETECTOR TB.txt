@@ -1,0 +1,74 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 04.08.2024 20:48:27
+// Design Name: 
+// Module Name: tb_patterndetector
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+module tb_patterndetector;
+
+    // Inputs to the DUT
+    reg clk;
+    reg rst;
+    reg in;
+    
+    // Output from the DUT
+    wire z;
+    
+    // Instantiate the Device Under Test (DUT)
+    fsm_pattern_moore uut(
+        .in(in),
+        .clk(clk),
+        .rst(rst),
+        .z(z)
+    );
+    
+    // Clock generation
+    initial begin
+        clk = 0;
+        forever #5 clk = ~clk; // 10ns period
+    end
+    
+    // Test sequence
+    initial begin
+        // Initialize inputs
+        rst = 1; 
+        in = 0;
+        #10;
+        
+        rst = 0;
+        #10;
+        
+        // Apply input sequence
+        in = 1; #10;
+        in = 0; #10;
+        in = 1; #10;
+        in = 1; #10;
+        in = 0; #10;
+        in = 1; #10;
+        in = 0; #10;
+        
+        // End of test
+        $stop;
+    end
+    
+    // Monitor the outputs
+    initial begin
+        $monitor("Time = %0d, in = %b, z = %b", $time, in, z);
+    end
+    
+endmodule
