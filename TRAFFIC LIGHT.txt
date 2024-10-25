@@ -1,0 +1,91 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 09.08.2024 13:55:08
+// Design Name: 
+// Module Name: traffic_signal
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+module traffic_signal(
+    input clk,
+    input rst,
+    output reg [1:0] ns,
+    output reg [1:0] ew
+    );
+    
+    // State definitions
+    parameter s1 = 2'b00, // NS Green, EW Red
+              s2 = 2'b01, // NS Yellow, EW Red
+              s3 = 2'b10, // NS Red, EW Green
+              s4 = 2'b11; // NS Red, EW Yellow
+     
+    reg [1:0] current_state, next_state;
+    reg [3:0] timer; 
+     
+    
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            current_state <= s1;
+            timer <= 4'b0;
+        end else begin
+            current_state <= next_state;
+            timer <= timer + 1;
+        end
+    end
+     
+    
+    always @(*) begin
+        case (current_state)
+            s1: begin
+                ns = 2'b10; // NS Green
+                ew = 2'b00; // EW Red
+                if (timer == 4'b1000)
+                    next_state = s2;
+                else
+                    next_state = s1;
+            end
+            s2: begin
+                ns = 2'b01; // NS Yellow
+                ew = 2'b00; // EW Red
+                if (timer == 4'b1000)
+                    next_state = s3;
+                else
+                    next_state = s2;
+            end
+            s3: begin
+                ns = 2'b00; // NS Red
+                ew = 2'b10; // EW Green
+                if (timer == 4'b1000)
+                    next_state = s4;
+                else
+                    next_state = s3;
+            end
+            s4: begin
+                ns = 2'b00; // NS Red
+                ew = 2'b01; // EW Yellow
+                if (timer == 4'b1000)
+                    next_state = s1;
+                else
+                    next_state = s4;
+            end
+            default: begin
+                ns = 2'b00; // Default NS Red
+                ew = 2'b00; // Default EW Red
+                next_state = s1;
+            end
+        endcase
+    end
+endmodule
