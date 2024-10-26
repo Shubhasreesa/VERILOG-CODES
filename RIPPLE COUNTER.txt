@@ -2,7 +2,7 @@
 
 module ripple_counter(
     input wire clk,
-    output reg [3:0] count // Correctly declare count as an output reg
+    output reg [3:0] count 
 );
 
 // Initialize count
@@ -10,7 +10,7 @@ initial begin
     count = 4'b0000;
 end
 
-// Define the always blocks for the ripple counter
+
 always @(negedge clk)
     count[0] <= ~count[0];
 
