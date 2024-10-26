@@ -64,7 +64,7 @@ module mealy_patterndetect(
             
             s011: begin
                 if (dir == 1)
-                    next_state = sin; // Go back to s01 or s00 based on design
+                    next_state = sin; // 
                 else
                     next_state = s0; 
             end
