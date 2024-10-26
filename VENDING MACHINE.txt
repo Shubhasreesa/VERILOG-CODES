@@ -31,7 +31,7 @@ module vending_machine(
     // State parameters
     parameter sin = 4'b0000, s10 = 4'b0001, s20 = 4'b0010, s30 = 4'b0011, 
               s40 = 4'b0100, s50 = 4'b0101, s60 = 4'b0110, s70 = 4'b0111, 
-              s80 = 4'b1000; // Changed s80 from 4'b100 to 4'b1000 to match 4-bit state width
+              s80 = 4'b1000; 
 
     // Coin parameters
     parameter ten = 2'b00, twenty = 2'b01, fifty = 2'b10;
@@ -92,9 +92,9 @@ module vending_machine(
             s20: begin z = 0; change = 0; end
             s30: begin z = 0; change = 0; end
             s40: begin z = 1; change = 0; end
-            s50: begin z = 1; change = 1; end // Corrected change output
-            s60: begin z = 1; change = 1; end // Corrected change output
-            s70: begin z = 1; change = 1; end // Corrected change output
+            s50: begin z = 1; change = 1; end 
+            s60: begin z = 1; change = 1; end 
+            s70: begin z = 1; change = 1; end 
             s80: begin z = 1; change = 1; end
         endcase
     end
